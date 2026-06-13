@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIGI EYEWEAR — Eyewear de Autor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Tipografías de la marca (Libre Baskerville) */
+  @font-face{font-family:'BigiSerif';src:url('LibreBaskerville-VariableFont_wght.ttf') format('truetype');font-weight:400 700;font-style:normal;font-display:swap}
+  @font-face{font-family:'BigiSerif';src:url('LibreBaskerville-Italic-VariableFont_wght.ttf') format('truetype');font-weight:400 700;font-style:italic;font-display:swap}
+  :root{
+    --bg:#efe3d0;        /* nude cálido */
+    --bg2:#e7d8c0;       /* arena */
+    --cream:#f8f1e4;     /* superficies claras */
+    --ink:#2c2218;       /* texto espresso */
+    --muted:#8c7a62;     /* taupe */
+    --bronze:#a9772f;    /* acento */
+    --bronze-soft:#c79a54;
+    --line:rgba(120,80,40,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body.locked{overflow:hidden}
+  ::selection{background:var(--bronze);color:#fff}
+  h1,h2,h3,.serif{font-family:'BigiSerif','Cormorant Garamond',serif;font-weight:500;letter-spacing:.01em}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;width:100%;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:22px 5vw;transition:background .4s,padding .4s,border-color .4s;border-bottom:1px solid transparent}
+  .nav.scrolled{background:rgba(248,241,228,.8);backdrop-filter:blur(14px);padding:14px 5vw;border-bottom:1px solid var(--line)}
+  .nav .brand{font-family:'BigiSerif','Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.28em;padding-left:.28em;font-weight:600;color:var(--ink);white-space:nowrap}
+  .nav .links{display:flex;gap:34px;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .nav .links a{transition:color .3s}.nav .links a:hover{color:var(--bronze)}
+  .nav .right{display:flex;align-items:center;gap:26px}
+  .cart-btn{position:relative;display:flex;align-items:center;gap:9px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze)}
+  .cart-btn svg{width:22px;height:22px;stroke:var(--bronze);fill:none;stroke-width:1.5}
+  .cart-count{position:absolute;top:-9px;right:-12px;background:var(--bronze);color:#fff;font-size:.62rem;font-weight:600;min-width:18px;height:18px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 5px;transform:scale(0);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+  .cart-count.show{transform:scale(1)}
+  @media(max-width:860px){.nav .links{display:none}}
+
+  /* HERO */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 42%,#fbf4e9 0%,#f3e7d4 45%,#efddc6 100%)}
+  .hero .glow{position:absolute;width:70vw;height:70vw;max-width:820px;max-height:820px;background:radial-gradient(circle,rgba(255,210,170,.5),transparent 62%);top:44%;left:50%;transform:translate(-50%,-50%);filter:blur(30px)}
+  .hero .glow.b{background:radial-gradient(circle,rgba(231,180,150,.32),transparent 60%);width:50vw;height:50vw;top:60%;left:60%}
+  .hero-content{position:relative;z-index:5;padding:0 6vw;pointer-events:none}
+  .eyebrow{font-size:.74rem;letter-spacing:.42em;text-transform:uppercase;color:var(--bronze);margin-bottom:24px}
+  .hero .eyebrow{color:#b07b3e}
+  .hero h1{font-size:clamp(2.4rem,7vw,5.6rem);line-height:.95;font-weight:500;color:#23201b;text-shadow:0 2px 30px rgba(255,240,220,.6)}
+  .hero h1 em{font-style:italic;color:#c0863c}
+  .hero p{max-width:500px;margin:26px auto 0;color:#6e5f4c;font-size:1rem;line-height:1.7;font-weight:400}
+  .fade{opacity:0;transform:translateY(30px);animation:fadeUp 1.1s forwards}
+  .fade.a{animation-delay:.15s}.fade.b{animation-delay:.35s}.fade.c{animation-delay:.55s}.fade.d{animation-delay:.8s}
+  @keyframes fadeUp{to{opacity:1;transform:none}}
+  .scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:6;font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;color:#9b835f;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .scroll-hint span{width:1px;height:44px;background:linear-gradient(#b07b3e,transparent);animation:drop 1.8s infinite}
+  @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+  /* LENTES QUE APARECEN DE GOLPE (estilo video) */
+  .float-layer{position:absolute;inset:0;z-index:2;pointer-events:none;will-change:transform}
+  .float-lens{position:absolute;width:var(--w);opacity:0;transform:scale(.2);animation:pop .8s var(--delay,0s) cubic-bezier(.2,1.5,.4,1) forwards}
+  @keyframes pop{to{opacity:1;transform:scale(1)}}
+  .float-lens img{display:block;width:100%;filter:drop-shadow(0 18px 24px rgba(120,80,40,.3));animation:floaty var(--dur,6s) ease-in-out infinite;animation-delay:var(--delay,0s)}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-12px) rotate(var(--rot,0deg))}}
+  .hero::after{content:"";position:absolute;bottom:0;left:0;width:100%;height:13vh;background:linear-gradient(to bottom,transparent,var(--bg));z-index:1;pointer-events:none}
+  @media(max-width:680px){.hero h1{font-size:clamp(2.8rem,14vw,5rem)}}
+
+  /* ====== iPHONE (bloqueado -> desbloquear -> menú) ====== */
+  .phone-scene{position:relative;height:440vh}
+  @media(max-width:680px){.phone-scene{height:360vh}}
+  .phone-pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:19vh;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#ecdcc4,#dcc8a9)}
+  .phone-title{position:absolute;top:5vh;left:0;width:100%;text-align:center;z-index:3;will-change:opacity,transform}
+  .phone-title .eyebrow{margin-bottom:6px}
+  .phone-title h2{font-size:clamp(1.5rem,4vw,2.6rem);line-height:1;color:var(--ink)}
+  .phone-title h2 em{font-style:italic;color:var(--bronze)}
+  .phone{position:relative;height:min(62vh,520px);aspect-ratio:1/2.04;will-change:transform}
+  @media(max-width:680px){.phone-pin{padding-top:16vh}.phone{height:min(60vh,460px)}}
+  .phone-frame{position:absolute;inset:0;background:linear-gradient(150deg,#46464b,#202024 55%,#37373c);border-radius:46px;padding:9px;box-shadow:0 0 0 2px #54545a, 0 34px 70px rgba(70,45,20,.42)}
+  .phone-screen{position:relative;width:100%;height:100%;border-radius:38px;overflow:hidden;background:#000;box-shadow:inset 0 0 0 2px #000;container-type:size}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:32%;height:24px;background:#000;border-radius:16px;z-index:14}
+  .pbtn{position:absolute;background:#2c2c30;border-radius:3px}
+  .pbtn-mute{left:-3px;top:21%;width:3px;height:3%}
+  .pbtn-vol1{left:-3px;top:30%;width:3px;height:7%}
+  .pbtn-vol2{left:-3px;top:40%;width:3px;height:7%}
+  .pbtn-power{right:-3px;top:30%;width:3px;height:11%}
+  /* HOME — efecto de marca al desbloquear (logo dorado con brillo) */
+  .home-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7%;background:radial-gradient(ellipse at 50% 42%,#241c12,#0c0a07 72%);color:#f3ece0;text-align:center;overflow:hidden}
+  .home-screen::before{content:"";position:absolute;top:22%;left:50%;transform:translateX(-50%);width:150%;height:52%;background:radial-gradient(ellipse,rgba(201,154,84,.28),transparent 60%);pointer-events:none}
+  .hs-logo{position:relative;z-index:1;font-family:'BigiSerif','Cormorant Garamond',serif;font-weight:700;font-size:10.5cqw;line-height:1.08;letter-spacing:.12em;padding-left:.12em;
+    background:linear-gradient(110deg,#b9863f 18%,#fff3d6 50%,#b9863f 82%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3.6s linear infinite}
+  @keyframes shimmer{to{background-position:-220% center}}
+  .hs-line{position:relative;z-index:1;width:26%;height:1.4cqw;border-radius:2px;background:linear-gradient(90deg,transparent,var(--bronze-soft),transparent)}
+  .hs-tag{position:relative;z-index:1;font-size:3.4cqw;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze-soft)}
+  /* LOCK SCREEN (estilo iPhone real — se desliza hacia arriba) */
+  .lock-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:16% 8% 0;color:#fff;background:radial-gradient(ellipse at 50% 6%,#2d2d35,#141418 55%,#0a0a0e);z-index:10;will-change:transform}
+  .lock-icon{font-size:5cqw;opacity:.9;margin-bottom:9%}
+  .lock-time{font-size:21cqw;font-weight:200;line-height:1;letter-spacing:.01em}
+  .lock-date{opacity:.7;font-size:4cqw;letter-spacing:.05em;margin-top:1cqw}
+  .lock-hint{position:absolute;bottom:5%;left:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:2.6cqw;font-size:3.2cqw;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
+  .lock-hint .chev{font-size:5cqw;line-height:.6;animation:swipeUp 1.6s ease-in-out infinite}
+  @keyframes swipeUp{0%,100%{transform:translateY(4px);opacity:.4}50%{transform:translateY(-5px);opacity:.95}}
+  .lock-bar{width:40%;height:1.4cqw;border-radius:2px;background:rgba(255,255,255,.85);margin-top:1cqw}
+
+  /* SECTIONS */
+  .section{padding:14vh 5vw}
+  .sec-head{text-align:center;margin-bottom:8vh}
+  .sec-head .eyebrow{margin-bottom:16px}
+  .sec-head h2{font-size:clamp(2.4rem,6vw,4.6rem);line-height:1;color:var(--ink)}
+  .sec-head h2 em{font-style:italic;color:var(--bronze)}
+  .sec-head p{color:var(--muted);max-width:480px;margin:18px auto 0;font-weight:400;line-height:1.7}
+
+  /* COLLECTION GRID */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;max-width:1300px;margin:0 auto}
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{position:relative;background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:26px 22px 24px;text-align:center;overflow:hidden;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s,border-color .5s;cursor:pointer;box-shadow:0 10px 30px rgba(120,80,40,.06)}
+  .card:hover{transform:translateY(-10px);border-color:rgba(169,119,47,.45);box-shadow:0 26px 50px rgba(120,80,40,.16)}
+  .card .imgwrap{position:relative;height:210px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .card .imgwrap img{max-height:185px;width:auto;transition:transform .6s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 16px 22px rgba(120,80,40,.22))}
+  .card:hover .imgwrap img{transform:scale(1.12) rotate(-3deg)}
+  .card .view-badge{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(10px);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze);background:rgba(255,255,255,.7);border:1px solid var(--line);padding:6px 12px;border-radius:30px;opacity:0;transition:.4s}
+  .card:hover .view-badge{opacity:1;transform:translateX(-50%) translateY(0)}
+  .card .tag{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--bronze);margin-bottom:7px}
+  .card h3{font-size:1.6rem;margin-bottom:5px;color:var(--ink)}
+  .card .price{font-size:.95rem;letter-spacing:.04em;color:var(--ink)}
+  .card .price s{color:var(--muted);font-size:.8rem;margin-right:8px}
+  .card .add{margin-top:16px;width:100%;border:1px solid var(--bronze);color:var(--bronze);padding:11px 0;border-radius:30px;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;transition:.3s}
+  .card .add:hover{background:var(--bronze);color:#fff}
+
+  /* EDITORIAL */
+  .editorial{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:6vw;padding:12vh 6vw;max-width:1300px;margin:0 auto}
+  .editorial.rev{direction:rtl}.editorial.rev>*{direction:ltr}
+  .editorial .ph img{width:100%;will-change:transform;border-radius:14px}
+  .editorial .txt h2{font-size:clamp(2.2rem,5vw,4rem);line-height:1.02;margin:18px 0 22px;color:var(--ink)}
+  .editorial .txt h2 em{font-style:italic;color:var(--bronze)}
+  .editorial .txt p{color:var(--muted);line-height:1.8;font-weight:400;margin-bottom:26px;max-width:430px}
+  .editorial .txt .price-line{font-family:'BigiSerif','Cormorant Garamond',serif;font-size:1.6rem;color:var(--bronze)}
+  @media(max-width:820px){.editorial{grid-template-columns:1fr;gap:34px}.editorial.rev{direction:ltr}}
+
+  /* CTA */
+  .cta-final{text-align:center;padding:20vh 6vw;background:radial-gradient(ellipse at 50% 50%,rgba(231,180,150,.25),transparent 70%)}
+  .cta-final h2{font-size:clamp(2.6rem,8vw,6rem);line-height:1;color:var(--ink)}
+  .cta-final h2 em{font-style:italic;color:var(--bronze)}
+  .cta-final .btn{margin-top:38px;display:inline-block;background:var(--bronze);color:#fff;padding:18px 44px;border-radius:40px;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;font-weight:500;transition:.4s}
+  .cta-final .btn:hover{background:#956522;transform:scale(1.04)}
+
+  footer{border-top:1px solid var(--line);padding:48px 5vw;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;color:var(--muted);font-size:.78rem;letter-spacing:.08em}
+  footer .brand{font-family:'BigiSerif','Cormorant Garamond',serif;letter-spacing:.4em;color:var(--ink);font-size:1.2rem}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(46px);transition:opacity 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.12s}.reveal.d2{transition-delay:.24s}.reveal.d3{transition-delay:.36s}
+
+  /* CART DRAWER */
+  .overlay{position:fixed;inset:0;background:rgba(60,40,20,.35);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.4s;z-index:300}
+  .overlay.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:var(--cream);border-left:1px solid var(--line);z-index:310;transform:translateX(100%);transition:transform .5s cubic-bezier(.4,0,.1,1);display:flex;flex-direction:column}
+  .drawer.open{transform:none}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:26px 26px 18px;border-bottom:1px solid var(--line)}
+  .drawer-head h3{font-size:1.5rem;letter-spacing:.1em;color:var(--ink)}
+  .drawer-head .close{font-size:1.6rem;color:var(--muted);line-height:1}
+  .cart-items{flex:1;overflow-y:auto;padding:10px 26px}
+  .cart-empty{color:var(--muted);text-align:center;padding:60px 0;font-weight:400}
+  .ci{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid rgba(120,80,40,.1)}
+  .ci img{width:64px;height:64px;object-fit:contain;background:#efe3d0;border-radius:10px;padding:6px;flex-shrink:0}
+  .ci .info{flex:1}
+  .ci .info h4{font-family:'Inter';font-size:.92rem;font-weight:500;margin-bottom:3px;color:var(--ink)}
+  .ci .info .p{color:var(--bronze);font-size:.85rem}
+  .ci .qty{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .ci .qty button{width:24px;height:24px;border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:.9rem;line-height:1}
+  .ci .qty span{font-size:.85rem;min-width:18px;text-align:center}
+  .ci .rm{align-self:flex-start;color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+  .ci .rm:hover{color:var(--bronze)}
+  .drawer-foot{padding:22px 26px;border-top:1px solid var(--line)}
+  .drawer-foot .row{display:flex;justify-content:space-between;margin-bottom:16px;font-size:1rem;color:var(--ink)}
+  .drawer-foot .row .total{font-family:'BigiSerif','Cormorant Garamond',serif;font-size:1.7rem;color:var(--bronze)}
+  .drawer-foot .checkout{width:100%;background:var(--bronze);color:#fff;padding:15px 0;border-radius:30px;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:500;transition:.3s}
+  .drawer-foot .checkout:hover{background:#956522}
+
+  /* QUICK VIEW MODAL */
+  .modal{position:fixed;inset:0;z-index:320;display:flex;align-items:center;justify-content:center;padding:4vw;opacity:0;visibility:hidden;transition:.4s}
+  .modal.open{opacity:1;visibility:visible}
+  .modal .box{position:relative;background:var(--cream);border:1px solid var(--line);border-radius:22px;width:min(960px,96vw);max-height:92vh;overflow:hidden;display:grid;grid-template-columns:1.1fr 1fr;transform:translateY(20px) scale(.97);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 40px 80px rgba(70,45,20,.25)}
+  .modal.open .box{transform:none}
+  @media(max-width:760px){.modal .box{grid-template-columns:1fr;max-height:94vh;overflow-y:auto}}
+  .modal .close{position:absolute;top:16px;right:18px;font-size:1.8rem;color:var(--muted);z-index:5;line-height:1}
+  .modal .close:hover{color:var(--bronze)}
+  .gallery{background:radial-gradient(ellipse at 50% 35%,#f5ead7,#e7d6bb);padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+  .gallery .main{height:min(46vh,380px);display:flex;align-items:center;justify-content:center}
+  .gallery .main img{max-height:100%;width:auto;filter:drop-shadow(0 22px 30px rgba(120,80,40,.3))}
+  .gallery .thumbs{display:flex;gap:12px}
+  .gallery .thumbs.hide{display:none}
+  .gallery .thumbs button{width:62px;height:62px;border:1px solid var(--line);border-radius:12px;padding:6px;background:#f8f1e4;transition:.3s;display:flex;align-items:center;justify-content:center}
+  .gallery .thumbs button.active{border-color:var(--bronze)}
+  .gallery .thumbs img{max-width:100%;max-height:100%;object-fit:contain}
+  .mdetail{padding:42px 38px;display:flex;flex-direction:column;justify-content:center}
+  .mdetail .tag{font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--bronze);margin-bottom:12px}
+  .mdetail h2{font-size:2.6rem;line-height:1;margin-bottom:14px;color:var(--ink)}
+  .mdetail .mprice{font-family:'BigiSerif','Cormorant Garamond',serif;font-size:2rem;color:var(--bronze);margin-bottom:20px}
+  .mdetail .mprice s{color:var(--muted);font-size:1.1rem;margin-right:10px}
+  .mdetail p{color:var(--muted);line-height:1.7;font-weight:400;margin-bottom:14px;font-size:.92rem}
+  .mdetail .specs{list-style:none;margin-bottom:26px}
+  .mdetail .specs li{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:.86rem;padding:5px 0;font-weight:400}
+  .mdetail .specs li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--bronze)}
+  .mdetail .madd{background:var(--bronze);color:#fff;padding:15px 0;border-radius:30px;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;transition:.3s}
+  .mdetail .madd:hover{background:#956522;transform:translateY(-2px)}
+
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bronze);color:#fff;padding:14px 26px;border-radius:40px;font-size:.78rem;letter-spacing:.06em;font-weight:500;z-index:400;opacity:0;transition:.45s cubic-bezier(.34,1.56,.64,1)}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  /* destello de luz en la transición cel -> menú */
+  .scene-flash{position:fixed;inset:0;z-index:120;pointer-events:none;opacity:0;mix-blend-mode:screen;
+    background:radial-gradient(ellipse at 50% 48%,rgba(255,247,228,1),rgba(214,168,92,.7) 38%,rgba(201,154,84,.15) 62%,transparent 78%)}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="brand">BIGI EYEWEAR</div>
+  <div class="links">
+    <a href="#coleccion">Colección</a>
+    <a href="#experiencia">Experiencia</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div class="right">
+    <button class="cart-btn" id="cartBtn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.4 12.4a1 1 0 0 0 1 .8h8.7a1 1 0 0 0 1-.8L21 7H6"/></svg>
+      <span>Carrito</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="glow b"></div>
+  <div class="float-layer" id="floatLayer">
+    <div class="float-lens" style="--w:clamp(76px,9vw,148px);--rot:-12deg;--dur:6s;--delay:.05s;top:19%;left:4%"><img src="23.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(66px,7.5vw,122px);--rot:14deg;--dur:6.6s;--delay:.18s;top:14%;left:18%"><img src="8.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(80px,9.5vw,154px);--rot:8deg;--dur:6.2s;--delay:.1s;top:17%;right:4%"><img src="1.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(64px,7vw,116px);--rot:-9deg;--dur:7s;--delay:.3s;top:14%;right:18%"><img src="3.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(78px,9.5vw,150px);--rot:-16deg;--dur:6.4s;--delay:.14s;bottom:15%;left:4%"><img src="20.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(66px,7.5vw,122px);--rot:16deg;--dur:6.8s;--delay:.34s;bottom:13%;left:18%"><img src="14.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(78px,9.5vw,146px);--rot:-11deg;--dur:6.5s;--delay:.22s;bottom:15%;right:4%"><img src="17.png" alt=""></div>
+    <div class="float-lens" style="--w:clamp(66px,7.5vw,120px);--rot:18deg;--dur:7.2s;--delay:.4s;bottom:13%;right:18%"><img src="11.png" alt=""></div>
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow fade a">Eyewear de autor · Edición limitada</div>
+    <h1 class="fade b">Mira el<br><em>mundo</em> distinto</h1>
+    <p class="fade c">Toda la colección, hecha a mano. Lentes que no solo se usan: se sienten.</p>
+  </div>
+  <div class="scroll-hint fade d">Desliza<span></span></div>
+</header>
+
+<!-- iPHONE -->
+<section class="phone-scene" id="experiencia">
+  <div class="phone-pin">
+    <div class="phone-title" id="phoneTitle">
+      <div class="eyebrow">Desbloquea la colección</div>
+      <h2>Desliza para <em>entrar</em></h2>
+    </div>
+    <div class="phone" id="phone">
+      <div class="phone-frame">
+        <div class="island"></div>
+        <div class="phone-screen">
+          <!-- HOME: efecto de marca al desbloquear -->
+          <div class="home-screen">
+            <div class="hs-logo">BIGI<br>EYEWEAR</div>
+            <div class="hs-line"></div>
+            <div class="hs-tag">La colección te espera</div>
+          </div>
+          <!-- LOCK SCREEN (se desliza hacia arriba) -->
+          <div class="lock-screen" id="lockScreen">
+            <div class="lock-icon" id="lockIcon">🔒</div>
+            <div class="lock-time">9:41</div>
+            <div class="lock-date">sábado 13 de junio</div>
+            <div class="lock-hint"><span class="chev">⌃</span>desliza para abrir<span class="lock-bar"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="pbtn pbtn-mute"></div>
+      <div class="pbtn pbtn-vol1"></div>
+      <div class="pbtn pbtn-vol2"></div>
+      <div class="pbtn pbtn-power"></div>
+    </div>
+  </div>
+</section>
+
+<!-- COLECCIÓN -->
+<section class="section" id="coleccion">
+  <div class="sec-head">
+    <div class="eyebrow reveal">La Colección</div>
+    <h2 class="reveal d1">Elige los <em>tuyos</em></h2>
+    <p class="reveal d2">Haz clic en cualquier modelo para verlo en grande y agregarlo al carrito.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- EDITORIAL -->
+<section class="editorial">
+  <div class="ph reveal"><img data-parallax="0.1" src="24.png" alt="Lentes de sol"></div>
+  <div class="txt">
+    <div class="eyebrow reveal">Línea Sol</div>
+    <h2 class="reveal d1">Protección con <em>actitud</em></h2>
+    <p class="reveal d2">Lentes polarizados con filtro UV400 que cuidan tu vista sin sacrificar el estilo. Color, contraste y claridad — todo el día.</p>
+    <div class="price-line reveal d3">Desde $299</div>
+  </div>
+</section>
+<section class="editorial rev">
+  <div class="ph reveal"><img data-parallax="0.1" src="5.png" alt="Lentes ópticos"></div>
+  <div class="txt">
+    <div class="eyebrow reveal">Línea Óptica</div>
+    <h2 class="reveal d1">Diseño que <em>te define</em></h2>
+    <p class="reveal d2">Cada montura se ajusta a tu rostro como si hubiera sido tallada para ti. Materiales nobles y un acabado que envejece con elegancia.</p>
+    <div class="price-line reveal d3">Desde $249</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-final" id="contacto">
+  <div class="eyebrow reveal" style="margin-bottom:20px">Tu nueva mirada te espera</div>
+  <h2 class="reveal d1">Encuentra el <em>par</em><br>que es tuyo</h2>
+  <a href="https://wa.me/525535725527?text=Hola%20BIGI%20EYEWEAR!%20Quiero%20informaci%C3%B3n%20sobre%20sus%20lentes." target="_blank" class="btn reveal d2">Escríbenos por WhatsApp</a>
+</section>
+
+<footer>
+  <div class="brand">BIGI EYEWEAR</div>
+  <div>Eyewear de autor · Edición limitada</div>
+  <div>© 2026 · Todos los derechos reservados</div>
+</footer>
+
+<!-- CART -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><h3>Tu carrito</h3><button class="close" id="cartClose">&times;</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="row"><span>Total</span><span class="total" id="cartTotal">$0</span></div>
+    <button class="checkout" id="checkout">Finalizar compra</button>
+  </div>
+</aside>
+
+<!-- QUICK VIEW -->
+<div class="modal" id="modal">
+  <div class="box">
+    <button class="close" id="modalClose">&times;</button>
+    <div class="gallery">
+      <div class="main"><img id="galMain" src="" alt=""></div>
+      <div class="thumbs" id="galThumbs"></div>
+    </div>
+    <div class="mdetail">
+      <div class="tag" id="mTag"></div>
+      <h2 id="mName"></h2>
+      <div class="mprice" id="mPrice"></div>
+      <p id="mDesc"></p>
+      <ul class="specs">
+        <li>Filtro UV400 · 100% protección</li>
+        <li>Acetato italiano premium</li>
+        <li>Estuche y paño incluidos</li>
+        <li>Garantía de 1 año</li>
+      </ul>
+      <button class="madd" id="mAdd">Agregar al carrito</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene-flash" id="sceneFlash"></div>
+<div class="toast" id="toast">Agregado al carrito</div>
+
+<script>
+/* ---------- DATA (cada lente con SU propia foto, sin mezclar) ---------- */
+const PRODUCTS=[
+  {id:'noir',   name:'Noir',    tag:'Óptico',       price:249, old:329, desc:'Montura negra cuadrada de pasta gruesa. Carácter arquitectónico.', imgs:['1.png','5.png','6.png']},
+  {id:'rouge',  name:'Rouge',   tag:'Edición Ltd.', price:349, old:429, desc:'Aviador de doble puente. Disponible en lente rojo o ámbar.', imgs:['23.png','24.png','25.png','4.png']},
+  {id:'ambar',  name:'Ámbar',   tag:'Sunglasses',   price:299, old:0,   desc:'Acetato tortoise cálido con lente ámbar. Un clásico con carácter.', imgs:['8.png','9.png','10.png']},
+  {id:'cristal',name:'Cristal', tag:'Óptico',       price:249, old:0,   desc:'Doble puente transparente. Aire ligero para el día a día.', imgs:['20.png','21.png','22.png']},
+  {id:'havana', name:'Havana',  tag:'Óptico',       price:299, old:0,   desc:'Montura tortoise rectangular de inspiración retro.', imgs:['17.png','18.png','19.png']},
+  {id:'vintage',name:'Vintage', tag:'Óptico',       price:329, old:0,   desc:'Aro redondo metálico con varillas doradas. Pieza de autor.', imgs:['14.png','16.png','15.png']},
+  {id:'aurora', name:'Aurora',  tag:'Sunglasses',   price:349, old:0,   desc:'Forma oversize con degradado suave. Elegancia femenina.', imgs:['3.png','2.png','7.png']},
+  {id:'rose',   name:'Rosé',    tag:'Sunglasses',   price:299, old:0,   desc:'Acetato rosado luminoso con lente rosa. Suave e inolvidable.', imgs:['11.png','12.png','13.png']}
+];
+const fmt=n=>'$'+n.toLocaleString('es-MX');
+
+
+/* ---------- GRID ---------- */
+const grid=document.getElementById('grid');
+PRODUCTS.forEach(p=>{
+  const el=document.createElement('div');el.className='card reveal';
+  el.innerHTML=`
+    <div class="imgwrap"><img src="${p.imgs[0]}" alt="${p.name}"><div class="view-badge">Ver más +</div></div>
+    <div class="tag">${p.tag}</div>
+    <h3>${p.name}</h3>
+    <div class="price">${p.old?`<s>${fmt(p.old)}</s>`:''}${fmt(p.price)}</div>
+    <button class="add">Agregar</button>`;
+  el.querySelector('.imgwrap').addEventListener('click',()=>openModal(p.id));
+  el.querySelector('h3').addEventListener('click',()=>openModal(p.id));
+  el.querySelector('.add').addEventListener('click',e=>{e.stopPropagation();addToCart(p.id)});
+  grid.appendChild(el);
+});
+
+/* ---------- CART ---------- */
+let cart=[];
+const cartCount=document.getElementById('cartCount'),cartItems=document.getElementById('cartItems'),cartTotal=document.getElementById('cartTotal');
+function addToCart(id,qty=1){const p=PRODUCTS.find(x=>x.id===id);const l=cart.find(x=>x.id===id);if(l)l.qty+=qty;else cart.push({id,qty});renderCart();pulseCount();showToast(`${p.name} agregado`)}
+function changeQty(id,d){const l=cart.find(x=>x.id===id);if(!l)return;l.qty+=d;if(l.qty<=0)cart=cart.filter(x=>x.id!==id);renderCart()}
+function removeItem(id){cart=cart.filter(x=>x.id!==id);renderCart()}
+function renderCart(){
+  const count=cart.reduce((s,x)=>s+x.qty,0);
+  cartCount.textContent=count;cartCount.classList.toggle('show',count>0);
+  if(!cart.length){cartItems.innerHTML='<div class="cart-empty">Tu carrito está vacío.<br>Elige tus lentes favoritos.</div>';cartTotal.textContent='$0';return}
+  let total=0;
+  cartItems.innerHTML=cart.map(x=>{const p=PRODUCTS.find(q=>q.id===x.id);total+=p.price*x.qty;
+    return `<div class="ci"><img src="${p.imgs[0]}" alt="">
+      <div class="info"><h4>${p.name}</h4><div class="p">${fmt(p.price)}</div>
+      <div class="qty"><button onclick="changeQty('${p.id}',-1)">−</button><span>${x.qty}</span><button onclick="changeQty('${p.id}',1)">+</button></div></div>
+      <button class="rm" onclick="removeItem('${p.id}')">Quitar</button></div>`}).join('');
+  cartTotal.textContent=fmt(total);
+}
+function pulseCount(){cartCount.style.transform='scale(1.4)';setTimeout(()=>cartCount.style.transform='',200)}
+const overlay=document.getElementById('overlay'),drawer=document.getElementById('drawer');
+function openCart(){drawer.classList.add('open');overlay.classList.add('open');document.body.classList.add('locked')}
+function closeCart(){drawer.classList.remove('open');overlay.classList.remove('open');document.body.classList.remove('locked')}
+document.getElementById('cartBtn').addEventListener('click',openCart);
+document.getElementById('cartClose').addEventListener('click',closeCart);
+overlay.addEventListener('click',closeCart);
+const WA='525535725527';
+document.getElementById('checkout').addEventListener('click',()=>{
+  if(!cart.length){showToast('Tu carrito está vacío');return}
+  let total=0;
+  const lines=cart.map(x=>{const p=PRODUCTS.find(q=>q.id===x.id);total+=p.price*x.qty;return `• ${x.qty}x ${p.name} — ${fmt(p.price)}`;});
+  const msg='Hola BIGI EYEWEAR! Quiero hacer este pedido:\n\n'+lines.join('\n')+'\n\nTotal: '+fmt(total)+'\n\n¿Me confirman disponibilidad y envío?';
+  window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank');
+});
+renderCart();
+
+/* ---------- QUICK VIEW ---------- */
+const modal=document.getElementById('modal');let modalProduct=null;
+function openModal(id){
+  const p=PRODUCTS.find(x=>x.id===id);modalProduct=p;
+  document.getElementById('mTag').textContent=p.tag;
+  document.getElementById('mName').textContent=p.name;
+  document.getElementById('mPrice').innerHTML=(p.old?`<s>${fmt(p.old)}</s>`:'')+fmt(p.price);
+  document.getElementById('mDesc').textContent=p.desc;
+  const main=document.getElementById('galMain');main.src=p.imgs[0];
+  const thumbs=document.getElementById('galThumbs');
+  thumbs.classList.toggle('hide',p.imgs.length<2);
+  thumbs.innerHTML=p.imgs.map((src,i)=>`<button class="${i===0?'active':''}" data-src="${src}"><img src="${src}" alt=""></button>`).join('');
+  thumbs.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{main.src=b.dataset.src;thumbs.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}));
+  modal.classList.add('open');document.body.classList.add('locked');
+}
+function closeModal(){modal.classList.remove('open');if(!drawer.classList.contains('open'))document.body.classList.remove('locked')}
+document.getElementById('modalClose').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.getElementById('mAdd').addEventListener('click',()=>{if(modalProduct){addToCart(modalProduct.id);closeModal()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeCart()}});
+
+/* ---------- TOAST ---------- */
+let toastT;const toast=document.getElementById('toast');
+function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toast.classList.remove('show'),2200)}
+
+/* ========= EFECTOS (bucle rAF, fluido en móvil) ========= */
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ss=x=>x*x*(3-2*x);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const nav=document.getElementById('nav');
+const phoneScene=document.querySelector('.phone-scene'),phonePin=document.querySelector('.phone-pin');
+const phone=document.getElementById('phone'),lockScreen=document.getElementById('lockScreen'),lockIcon=document.getElementById('lockIcon'),phoneTitle=document.getElementById('phoneTitle'),sceneFlash=document.getElementById('sceneFlash');
+const parallaxEls=[...document.querySelectorAll('[data-parallax]')];
+const floatLayer=document.getElementById('floatLayer');
+
+let vw=innerWidth,vh=innerHeight;
+function measure(){vw=innerWidth;vh=innerHeight;}
+measure();
+addEventListener('resize',measure);addEventListener('load',measure);
+
+/* parallax suave con mouse (desktop) */
+let tmx=0,tmy=0,mx=0,my=0;
+addEventListener('mousemove',e=>{tmx=(e.clientX-vw/2)/vw*-2;tmy=(e.clientY-vh/2)/vh*-2});
+
+function frame(t){
+  const y=window.scrollY;
+  nav.classList.toggle('scrolled',y>40);
+  mx+=(tmx-mx)*0.06; my+=(tmy-my)*0.06;
+
+  /* ---- LENTES DE LA PORTADA: parallax sutil con el mouse ---- */
+  if(floatLayer) floatLayer.style.transform=`translate(${(mx*9).toFixed(1)}px,${(my*9).toFixed(1)}px)`;
+
+  /* ---- iPHONE: bloqueado -> el dedo desliza -> se abre el menú ---- */
+  const rect=phoneScene.getBoundingClientRect(), total=phoneScene.offsetHeight-vh;
+  const p=clamp(-rect.top/total,0,1);
+  const lockUp=ss(clamp((p-0.18)/0.34,0,1));          // se desliza hacia arriba (como iPhone)
+  lockScreen.style.transform=`translateY(${(-lockUp*102).toFixed(1)}%)`;
+  lockIcon.textContent=lockUp>0.04?'🔓':'🔒';          // candado se abre
+  const zoom=ss(clamp((p-0.5)/0.34,0,1));            // al abrir, acerca un poco el menú
+  phone.style.transform=`scale(${(1+zoom*0.12).toFixed(3)})`;
+  phoneTitle.style.opacity=(1-clamp(p/0.2,0,1)).toFixed(2);
+  phoneTitle.style.transform=`translateY(${(-clamp(p/0.2,0,1)*36).toFixed(0)}px)`;
+  const fade=clamp((p-0.9)/0.1,0,1);
+  phonePin.style.opacity=(1-fade).toFixed(2);
+  // destello de luz en la transición cel -> menú (pico en p≈0.9)
+  const flash=ss(clamp(1-Math.abs(p-0.9)/0.1,0,1));
+  sceneFlash.style.opacity=flash.toFixed(3);
+
+  for(const el of parallaxEls){const r=el.getBoundingClientRect(),sp=parseFloat(el.dataset.parallax);el.style.transform=`translateY(${((r.top+r.height/2-vh/2)*-sp).toFixed(1)}px) scale(1.05)`;}
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
